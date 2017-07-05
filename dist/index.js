@@ -43,7 +43,12 @@ const whereObj = where => Object.keys(where).map(key => {
 const handleSoftDelete = where => _config2.default.mysql_soft_delete === '1' ? where.toLowerCase().replace('where', '').trim().length > 0 ? where + ' AND ' + _config2.default.mysql_soft_delete_field + ' = 0 ' : _config2.default.mysql_soft_delete_field + ' = 0 ' : where;
 
 const ensureWhere = where => where.trim().length > 0 ? where.trim().toLowerCase().indexOf('where') > -1 ? where : ' WHERE ' + where : '';
-const prepareWhere = where => ensureWhere(handleSoftDelete(typeof where == 'string' ? whereStr(where) : ' WHERE ' + whereObj(where)));
+const prepareWhere = where => {
+  if (where) {
+    return ensureWhere(handleSoftDelete(typeof where == 'string' ? whereStr(where) : ' WHERE ' + whereObj(where)));
+  }
+  return '';
+};
 
 const sqlFields = obj => Object.keys(obj).join();
 const sqlValues = obj => Object.values(obj).map(quoteIfStrOrDate).join();
@@ -68,7 +73,7 @@ const prepareUpdate = updates => Object.keys(updates).map(key => {
   return key + ' = ' + quoteIfStrOrDate(updates[key]) + ' ';
 }).join(' , ');
 
-const prepareLimit = limig => limit ? ' Limit ' + limit : '';
+const prepareLimit = limit => limit ? ' Limit ' + limit : '';
 
 function update(table, updates, where) {
   return (0, _getMysqlConnection2.default)().then(runQuery(sql.update(table, prepareUpdate(updates), prepareWhere(where)))).then(r => r[0]);

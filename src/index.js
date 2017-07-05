@@ -61,7 +61,7 @@ const prepareUpdate = updates => Object.keys(updates).map( key => {
   return key + ' = ' + quoteIfStrOrDate(updates[key]) + ' '
 }).join(' , ')
 
-const prepareLimit = limig => limit ? ' Limit '+limit  : ''
+const prepareLimit = limit => limit ? ' Limit '+limit  : ''
 
 export function update(table,updates,where){
   return getConnection()
