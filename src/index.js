@@ -25,7 +25,9 @@ const handleSoftDelete = where =>
   where
 
 const ensureWhere = where => where.trim().length > 0 ? where.trim().toLowerCase().indexOf('where') > -1 ? where : ' WHERE '+where : ''
-const prepareWhere = where => ensureWhere(handleSoftDelete(typeof(where) == 'string' ? whereStr(where) : ' WHERE ' + whereObj(where)))
+const prepareWhere = where =>
+  where ?
+      ensureWhere(handleSoftDelete(typeof(where) == 'string' ? whereStr(where) : ' WHERE ' + whereObj(where))) : ''
 
 const sqlFields = obj => Object.keys(obj).join()
 const sqlValues = obj => Object.values(obj).map(quoteIfStrOrDate).join()
