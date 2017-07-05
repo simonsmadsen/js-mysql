@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.connectionPool = undefined;
 
-var _config = require('./../../config');
+var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
 
@@ -23,6 +23,7 @@ const dbConfig = {
     password: _config2.default.mysql_password,
     database: _config2.default.mysql_database
 };
+
 if (_config2.default.mac) {
     dbConfig.socketPath = '/tmp/mysql.sock';
 }

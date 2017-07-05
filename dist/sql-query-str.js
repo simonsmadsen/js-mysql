@@ -9,6 +9,6 @@ const hasWhereInWhere = where => where.toLower().indexOf('where') > -1 ? true : 
 
 const update = exports.update = (table, fieldValuePairs, where) => 'UPDATE ' + table + ' SET ' + fieldValuePairs + (where ? where : '');
 
-const find = exports.find = (table, where) => 'SELECT * FROM ' + table + ' ' + where;
+const select = exports.select = (table, where) => 'SELECT * FROM ' + table + ' ' + where;
 
 const _delete = exports._delete = (table, where) => 'DELETE FROM ' + table + ' ' + where;
