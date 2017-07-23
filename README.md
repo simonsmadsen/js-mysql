@@ -1,30 +1,58 @@
-import {route,postRoute,start,storage} from ''
-const ofilter = storage.mysql.filterObject
+# js-mysql
 
-const metaData = {
-  'created_at': storage.mysql.now(),
-  'updated_at': storage.mysql.now()
+Javascript mysql library for js-web framework
+
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development purposes.
+
+
+### Installing
+
+A step by step series of examples that tell you have to get a development env running
+
+
+```
+npm install js-mysql
+```
+
+Code example
+
+```
+try {
+  pack.pack([
+    pack.scriptCDN('https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'),
+    pack.jsx('react','compile.js'),
+    pack.babel('site','site.js'),
+    pack.scriptFile('index.js'),
+    pack.sass('sass/index.sass')
+  ],'assets/bundle.js','assets/bundle.css')
+} catch (err) {
+  console.log(err)
 }
-const prepareCreateObj = params => Object.assign(metaData,ofilter(params,'url'))
-postRoute('/create', params => storage.mysql.create('links',prepareCreateObj(params)))
+```
 
-/*
-    SELECTION
- */
-route('/link/:link_id', params => storage.mysql.find('links',params))
-route('/links', params => storage.mysql.select('links',params))
+## API
 
-/*
-    REMOVEING
- */
-postRoute('/link/:link_id', params => storage.mysql._delete('links',params))
+Overview over js-pack api
 
-/*
-    UPDATING
- */
-postRoute('/update/:link_id', p => storage.mysql.update('links',ofilter(p,'url'),ofilter(p,'link_id')))
+### Style
 
-/*
-    Start listen!
- */
-start()
+```
+cssFile(file)
+cssCDN(url)
+sass(file)
+```
+
+### Script
+
+```
+scriptFile(file)
+scriptCDN(url)
+babel(folder,index)
+jsx(folder,index)
+```
+### Bundle/Pack
+```
+pack(arrOfInjections,scriptOut,styleOut)
+```

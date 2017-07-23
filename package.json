@@ -1,6 +1,6 @@
 {
   "name": "js-mysql",
-  "version": "1.0.4",
+  "version": "1.2.2",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -9,9 +9,9 @@
     "clean": "rm -rf dist",
     "build": "npm run clean && mkdir dist && babel src -d dist"
   },
-  "repository" :{
-     "type" : "git",
-     "url" : "https://github.com/simonsmadsen/js-mysql"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/simonsmadsen/js-mysql"
   },
   "author": "Simon Madsen",
   "license": "ISC",
