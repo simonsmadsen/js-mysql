@@ -11,4 +11,6 @@ const update = exports.update = (table, fieldValuePairs, where) => 'UPDATE ' + t
 
 const select = exports.select = (table, where) => 'SELECT * FROM ' + table + ' ' + where;
 
+const selectFields = exports.selectFields = (select, table, where) => 'SELECT ' + select + ' FROM ' + table + ' ' + where;
+
 const _delete = exports._delete = (table, where) => 'DELETE FROM ' + table + ' ' + where;

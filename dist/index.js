@@ -8,6 +8,8 @@ exports.create = create;
 exports.find = find;
 exports.update = update;
 exports._delete = _delete;
+exports.selectCols = selectCols;
+exports.selectFields = selectFields;
 exports.select = select;
 exports.raw = raw;
 exports.table = table;
@@ -35,7 +37,7 @@ const quote = str => '\'' + str + '\'';
 const formatDate = date => date.toISOString().slice(0, 19).replace('T', ' ');
 const createDate = _ => formatDate(new Date());
 const prepareLimit = limit => limit > 0 ? ' Limit ' + limit : '';
-const prepareOrder = order => order.trim().length < 1 ? '' : ' Order by ' + order;
+const prepareOrder = order => order ? ' Order by ' + order : '';
 const formatBool = bool => bool ? '1' : '0';
 const log = log => {
   console.log(log);
@@ -54,7 +56,7 @@ const whereValues = where => !where || typeof where == 'string' ? [] : Object.ke
   return quoteIfStrOrDate(where[key]);
 });
 
-const handleSoftDelete = where => _config2.default.mysql_soft_delete === '1' ? where.toLowerCase().replace('where', '').trim().length > 0 ? where + ' AND ' + _config2.default.mysql_soft_delete_field + ' = 0 ' : _config2.default.mysql_soft_delete_field + ' = 0 ' : where;
+const handleSoftDelete = where => _config2.default.mysql_soft_delete === 'true' ? where.toLowerCase().replace('where', '').trim().length > 0 ? where + ' AND ' + _config2.default.mysql_soft_delete_field + ' = 0 ' : _config2.default.mysql_soft_delete_field + ' = 0 ' : where;
 
 const ensureWhere = where => where.trim().length > 0 ? where.trim().toLowerCase().indexOf('where') > -1 ? where : ' WHERE ' + where : '';
 const prepareWhere = where => {
@@ -71,7 +73,7 @@ const sqlValuesPrepared = obj => Object.values(obj).map(_ => '?').join();
 const objectToCreateQuery = (table, obj) => sql.insert(table, sqlFields(obj), sqlValuesPrepared(obj));
 
 const printQuery = (query, vals) => {
-  if (_config2.default.mysql_query_debug == '1') {
+  if (_config2.default.mysql_query_debug == 'true') {
     console.log([query, vals]);
   }
   return query;
@@ -88,7 +90,7 @@ const runQuery = (query, values) => conn => {
 
 const queryCreate = (table, obj) => conn => runQuery(objectToCreateQuery(table, obj), sqlValues(obj))(conn);
 
-const takeFirst = queryResult => queryResult[0].length > 0 ? queryResult[0][0] : {};
+const takeFirst = queryResult => queryResult[0].length > 0 ? queryResult[0][0] : null;
 
 function insert(table, obj) {
   return create(table, obj);
@@ -116,7 +118,7 @@ function update(table, updates, where) {
 }
 
 function _delete(table, where) {
-  if (_config2.default.mysql_soft_delete === '0') {
+  if (_config2.default.mysql_soft_delete !== 'true') {
     return (0, _getMysqlConnection2.default)().then(runQuery(sql._delete(table, prepareWhere(where)), whereValues(where)));
   } else {
     const deleteField = _config2.default.mysql_soft_delete_field;
@@ -124,6 +126,14 @@ function _delete(table, where) {
     updates[deleteField] = 1;
     return (0, _getMysqlConnection2.default)().then(runQuery(sql.update(table, prepareUpdate(updates), prepareWhere(where)), prepareUpdateValues(updates).concat(whereValues(where)))).then(r => r[0]);
   }
+}
+
+function selectCols(table, fields, where, orderBy, limit = 0) {
+  return (0, _getMysqlConnection2.default)().then(runQuery(sql.selectFields(fields, table, prepareWhere(where) + prepareOrder(orderBy) + prepareLimit(limit)), whereValues(where))).then(r => r[0]);
+}
+
+function selectFields(table, fields, where, orderBy, limit = 0) {
+  return (0, _getMysqlConnection2.default)().then(runQuery(sql.selectFields(fields, table, prepareWhere(where) + prepareOrder(orderBy) + prepareLimit(limit)), whereValues(where))).then(r => r[0]);
 }
 
 function select(table, where, orderBy, limit = 0) {
@@ -139,11 +149,12 @@ function table(table) {
     delete: where => _delete(table, where),
     find: where => find(table, where),
     select: (where, order = '', limit = 0) => select(table, where, order, limit),
+    selectFields: (fields, where, order = '', limit = 0) => selectFields(table, fields, where, order, limit),
+    selectCols: (fields, where, order = '', limit = 0) => selectFields(table, fields, where, order, limit),
     update: (updates, where) => update(table, updates, where),
     create: obj => create(table, obj)
   };
 }
-
 function now() {
   return createDate();
 }

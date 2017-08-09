@@ -11,7 +11,7 @@ const dbConfig = {
     database : config.mysql_database
 }
 
-if(config.mac){
+if(config.mac === 'true'){
   dbConfig.socketPath = '/tmp/mysql.sock'
 }
 

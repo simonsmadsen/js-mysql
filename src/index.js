@@ -5,7 +5,7 @@ const quote = str => '\''+str+'\''
 const formatDate = date => date.toISOString().slice(0, 19).replace('T', ' ')
 const createDate = _ => formatDate(new Date())
 const prepareLimit = limit => limit > 0 ? ' Limit '+limit  : ''
-const prepareOrder = order => order.trim().length < 1 ? '' : ' Order by '+ order
+const prepareOrder = order => order ? ' Order by '+ order : ''
 const formatBool = bool => bool ? '1' : '0'
 const log = log => {
   console.log(log)
@@ -28,7 +28,7 @@ const whereValues = where => ! where || typeof(where) == 'string' ? [] : Object.
 })
 
 const handleSoftDelete = where =>
-  config.mysql_soft_delete === '1' ?
+  config.mysql_soft_delete === 'true' ?
   where.toLowerCase().replace('where','').trim().length > 0 ?
     where + ' AND '+config.mysql_soft_delete_field+' = 0 ' :
     config.mysql_soft_delete_field+' = 0 ' :
@@ -49,7 +49,7 @@ const sqlValuesPrepared = obj => Object.values(obj).map(_ => '?').join()
 const objectToCreateQuery = (table,obj) => sql.insert(table,sqlFields(obj),sqlValuesPrepared(obj))
 
 const printQuery = (query,vals) => {
-  if(config.mysql_query_debug == '1'){
+  if(config.mysql_query_debug == 'true'){
     console.log([query,vals])
   }
   return query
@@ -69,7 +69,7 @@ const queryCreate = (table,obj) => conn =>
   runQuery(objectToCreateQuery(table,obj),sqlValues(obj))(conn)
 
 const takeFirst = queryResult =>
-  queryResult[0].length > 0 ? queryResult[0][0] : {}
+  queryResult[0].length > 0 ? queryResult[0][0] : null
 
 
 export function insert(table,obj){
@@ -112,7 +112,7 @@ export function update(table,updates,where){
 }
 
 export function _delete(table,where){
-  if(config.mysql_soft_delete === '0'){
+  if(config.mysql_soft_delete !== 'true'){
     return getConnection()
     .then(runQuery(sql._delete(table,prepareWhere(where)),whereValues(where)))
   }else{
@@ -127,6 +127,18 @@ export function _delete(table,where){
     )
     .then(r => r[0])
   }
+}
+
+export function selectCols(table,fields,where,orderBy,limit = 0){
+  return getConnection()
+  .then(runQuery(sql.selectFields(fields,table,prepareWhere(where)+prepareOrder(orderBy)+prepareLimit(limit)),whereValues(where)))
+  .then(r => r[0])
+}
+
+export function selectFields(table,fields,where,orderBy,limit = 0){
+  return getConnection()
+  .then(runQuery(sql.selectFields(fields,table,prepareWhere(where)+prepareOrder(orderBy)+prepareLimit(limit)),whereValues(where)))
+  .then(r => r[0])
 }
 
 export function select(table,where,orderBy,limit = 0){
@@ -146,11 +158,12 @@ export function table(table){
     delete: where => _delete(table,where),
     find: where => find(table,where),
     select: (where,order = '',limit = 0) => select(table,where,order,limit),
+    selectFields: (fields,where,order = '', limit = 0) => selectFields(table,fields,where,order,limit),
+    selectCols: (fields,where,order = '', limit = 0) => selectFields(table,fields,where,order,limit),
     update: (updates,where) => update(table,updates,where),
     create: obj => create(table,obj)
   }
 }
-
 export function now(){
   return createDate()
 }

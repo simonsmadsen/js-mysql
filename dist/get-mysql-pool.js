@@ -24,7 +24,7 @@ const dbConfig = {
     database: _config2.default.mysql_database
 };
 
-if (_config2.default.mac) {
+if (_config2.default.mac === 'true') {
     dbConfig.socketPath = '/tmp/mysql.sock';
 }
 

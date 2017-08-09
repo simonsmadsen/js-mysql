@@ -9,5 +9,8 @@ export const update = (table,fieldValuePairs,where) =>
 export const select = (table,where) =>
   'SELECT * FROM ' + table + ' ' + where
 
+export const selectFields = (select,table,where) =>
+  'SELECT '+select+' FROM '+table+ ' ' + where
+
 export const _delete = (table,where) =>
   'DELETE FROM ' + table + ' ' + where
