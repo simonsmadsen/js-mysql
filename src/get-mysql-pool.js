@@ -8,7 +8,8 @@ const dbConfig = {
     host     : config.mysql_host ,
     user     : config.mysql_user,
     password : config.mysql_password,
-    database : config.mysql_database
+    database : config.mysql_database,
+    port     : config.mysql_port ? config.mysql_port : 3306
 }
 
 if(config.mac === 'true'){

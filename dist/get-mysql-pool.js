@@ -21,7 +21,8 @@ const dbConfig = {
     host: _config2.default.mysql_host,
     user: _config2.default.mysql_user,
     password: _config2.default.mysql_password,
-    database: _config2.default.mysql_database
+    database: _config2.default.mysql_database,
+    port: _config2.default.mysql_port ? _config2.default.mysql_port : 3306
 };
 
 if (_config2.default.mac === 'true') {

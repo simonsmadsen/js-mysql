@@ -1,58 +1,19 @@
 # js-mysql
 
-Javascript mysql library for js-web framework
+Javascript package for js-web framework.
 
-## Getting Started
+http://js-web-framework.com
 
-These instructions will get you a copy of the project up and running on your local machine for development purposes.
+https://www.npmjs.com/package/js-web
 
+## docs
 
-### Installing
+http://localhost:8080/docs/mysql-getting-started
 
-A step by step series of examples that tell you have to get a development env running
+http://localhost:8080/docs/mysql-creating
 
+http://localhost:8080/docs/mysql-reading
 
-```
-npm install js-mysql
-```
+http://localhost:8080/docs/mysql-updating
 
-Code example
-
-```
-try {
-  pack.pack([
-    pack.scriptCDN('https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'),
-    pack.jsx('react','compile.js'),
-    pack.babel('site','site.js'),
-    pack.scriptFile('index.js'),
-    pack.sass('sass/index.sass')
-  ],'assets/bundle.js','assets/bundle.css')
-} catch (err) {
-  console.log(err)
-}
-```
-
-## API
-
-Overview over js-pack api
-
-### Style
-
-```
-cssFile(file)
-cssCDN(url)
-sass(file)
-```
-
-### Script
-
-```
-scriptFile(file)
-scriptCDN(url)
-babel(folder,index)
-jsx(folder,index)
-```
-### Bundle/Pack
-```
-pack(arrOfInjections,scriptOut,styleOut)
-```
+http://localhost:8080/docs/mysql-deleting
