@@ -1,9 +1,8 @@
 const env = require('dotenv')
-let _config = env.config().parsed
+let config = env.config().parsed
 
-if(!_config){
-  _config =
+if(!config){
+  config =
     env.config({path: __dirname+'/../'+'.env_template'}).parsed
 }
-
-export default _config
+export default config

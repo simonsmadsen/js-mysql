@@ -14,10 +14,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const mysql = require('mysql2/promise');
 
 const dbConfig = {
-  host: _config2.default.mysql_host,
-  user: _config2.default.mysql_user,
-  password: _config2.default.mysql_password,
-  database: _config2.default.mysql_database,
+  host: _config2.default.mysql_host || 'localhost',
+  user: _config2.default.mysql_user || 'root',
+  password: _config2.default.mysql_password || '',
+  database: _config2.default.mysql_database || '',
   port: _config2.default.mysql_port ? _config2.default.mysql_port : 3306
 };
 

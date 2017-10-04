@@ -1,0 +1,7 @@
+test
+src
+.eslintrc.js
+bin
+build
+.env_template
+.env
